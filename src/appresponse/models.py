@@ -4,6 +4,7 @@ import uuid
 
 # Create your models here.
 class AppResponse(models.Model):
+    id = models.AutoField(primary_key= True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     session_id = models.UUIDField(db_index=True, default=uuid.uuid4)
     user_input = models.TextField(default=list, help_text="User input text")

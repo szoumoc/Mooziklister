@@ -25,6 +25,8 @@ MEDIA_URL = '/media/'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-m&+z*$&gacm3k+3e)1i9hjn!bw2@rzusneqr$47rj#-72e_+)y"
+SPOTIFY_CLIENT_ID = "9aebe6a0a61e4b448d0745ffaa884f9a"
+SPOTIFY_CLIENT_SECRET = "f89f2f0a22214eb0a44c743e51d9e5aa"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     # myapps
     "user",
     "spotifyUserProfile",
+    "appresponse",
 ]
 
 
