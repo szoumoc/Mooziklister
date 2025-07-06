@@ -1,0 +1,18 @@
+{% load socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login with Spotify</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded-xl shadow-md text-center max-w-md w-full">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800">Login</h1>
+        <a href="{% provider_login_url 'spotify' %}"
+           class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-200">
+            Login with Spotify
+        </a>
+    </div>
+</body>
+</html>

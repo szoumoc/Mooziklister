@@ -2,3 +2,4 @@ Django
 pillow
 spotipy
 requests
+django-allauth

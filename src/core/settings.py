@@ -20,6 +20,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -43,13 +54,32 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'django.contrib.sites',
     # myapps
     "user",
     "spotifyUserProfile",
     "appresponse",
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.spotify',
 ]
 
+SOCIALACCOUNT_PROVIDERS = {
+    'spotify': {
+        'SCOPE': [
+            'user-read-email',
+            'playlist-modify-public',
+            'playlist-modify-private',
+        ],
+    }
+}
 
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
+# ACCOUNT_LOGIN_REDIRECT_URL = '/'
+# ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'  # if you're using a custom login view
 
     
     
@@ -61,6 +91,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -68,7 +99,7 @@ ROOT_URLCONF = "core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR/"templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
