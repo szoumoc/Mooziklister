@@ -42,9 +42,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # myapps
-    "playlist",
     "user",
-    "appresponse",
+    "spotifyUserProfile",
 ]
 
 
