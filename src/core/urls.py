@@ -18,13 +18,15 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import login_page
+from .views import login_page, hello
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('accounts/', include('allauth.urls')), 
-    path('', login_page, name='login'),
+    path('', hello ), 
+    path('login/', login_page, name='login'),
+    path('user/', include('user.urls')),
 
 ]
 

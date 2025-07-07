@@ -20,14 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-SITE_ID = 1
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
-
-LOGIN_REDIRECT_URL = '/'
 
 
 
@@ -65,21 +58,41 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.spotify',
 ]
 
+SITE_ID = 1
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_REQUIRED = False
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_ADAPTER = "allauth.account.adapter.DefaultAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "allauth.socialaccount.adapter.DefaultSocialAccountAdapter"
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+LOGIN_REDIRECT_URL = '/'
+# Remove or comment out the APP section
 SOCIALACCOUNT_PROVIDERS = {
     'spotify': {
+        # 'APP': {
+        #     'client_id': SPOTIFY_CLIENT_ID,
+        #     'secret': SPOTIFY_CLIENT_SECRET,
+        # },
         'SCOPE': [
             'user-read-email',
             'playlist-modify-public',
             'playlist-modify-private',
         ],
+        "REDIRECT_URI": "http://127.0.0.1:8000/accounts/spotify/login/callback/",
     }
 }
-
+SOCIALACCOUNT_ADAPTER = 'allauth.socialaccount.adapter.DefaultSocialAccountAdapter'
 SOCIALACCOUNT_AUTO_SIGNUP = True
 
-# ACCOUNT_LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGIN_REDIRECT_URL = '/'
 # ACCOUNT_LOGOUT_REDIRECT_URL = '/'
-LOGIN_URL = '/login/'  # if you're using a custom login view
+  # if you're using a custom login view
 
     
     
