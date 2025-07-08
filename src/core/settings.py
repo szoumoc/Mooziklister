@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-
+from decouple import config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,9 +28,9 @@ MEDIA_URL = '/media/'
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-m&+z*$&gacm3k+3e)1i9hjn!bw2@rzusneqr$47rj#-72e_+)y"
-SPOTIFY_CLIENT_ID = "9aebe6a0a61e4b448d0745ffaa884f9a"
-SPOTIFY_CLIENT_SECRET = "f89f2f0a22214eb0a44c743e51d9e5aa"
+SECRET_KEY = config("SECRET_KEY")
+SPOTIFY_CLIENT_ID = config("SPOTIFY_CLIENT_ID")
+SPOTIFY_CLIENT_SECRET = config("SPOTIFY_CLIENT_SECRET")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
