@@ -27,6 +27,7 @@ urlpatterns = [
     path('', hello ), 
     path('login/', login_page, name='login'),
     path('user/', include('user.urls')),
+    path('api/app_response/', include('appresponse.urls')), 
 
 ]
 
