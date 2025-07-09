@@ -3,6 +3,8 @@ from rest_framework import serializers, views, status, permissions
 from rest_framework.response import Response
 import google.generativeai as genai
 import uuid
+import os
+from dotenv import load_dotenv
 from .serializers import (
     StartSessionSerializer,
     ModifySongSerializer,
@@ -28,7 +30,8 @@ from .serializers import (
 
 
 # Configure your Gemini API key
-genai.configure(api_key='AIzaSyALN5q06T4RISspgSylN6Jpv3qiTo7Qz7g')
+load_dotenv()
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
 
 # Load the Gemini model
 model = genai.GenerativeModel(model_name='gemini-1.5-flash')
@@ -38,12 +41,16 @@ chat_sessions = {}
 
 # Define your custom system context
 SYSTEM_CONTEXT = """<s>
-You are an AI **Song Generation Agent**. Your job is to generate songs based on user input (like theme, genre, mood), and improve them based on structured feedback. You work in a loop until the user finalizes the playlist.
+You are an AI **Song Generation Agent**. Your job is to generate songs based on user input (like theme, genre and if they dont specify then find a mix of trendy and classic songs),
+and improve them based on structured feedback. You work in a loop until the user finalizes the playlist.
 
 Your Responsibilities:
-Generate 20 unique songs/snippets when the user gives an initial prompt.
+Generate the number of songs (or 15 songs if there is no specific number) unique songs when the user gives an initial prompt.
+the songs you generate will be stored in a database model using a function temp_list(dict):
+then you will call the function fetch_songs_spotify(): returns users feedback in form of true or false, what fetch_songs_spotify() do is it
+calls the spotify api and gets the song details 
 Wait for feedback – the user might ask to modify, regenerate, or accept specific songs.
-Use this feedback to improve only the selected songs. Maintain the others.
+Use this feedback to improve the selected songs and Maintain the others or you can also be asked to modify the whole playlist for which you have the 
 Repeat until the user says: "generate now" – then finalize the playlist.
 
 Format: Each song should have: Title, singer Optional: audio link (if implemented later)
@@ -52,7 +59,7 @@ Don't lose track of which songs were modified.
 Try to learn the user's style over multiple rounds.
 </s>
 
-<Example User Flow>
+<Example User Flow>   { name : song, singer
 User: "Make 20 songs about heartbreak in Lo-Fi style"
 Agent: (generates songs 1–10)
 User: modify_song(5)
