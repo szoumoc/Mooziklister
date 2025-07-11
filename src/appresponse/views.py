@@ -52,7 +52,7 @@ Generate the number of songs (or 15 songs if there is no specific number) unique
 
 Wait for feedback – the user might ask to modify, regenerate, or accept specific songs.
 Use this feedback to improve the selected songs and Maintain the others or you can also be asked to modify the whole playlist but keeping the number of songs same 
-Repeat until the user says: "generate now" – then finalize the playlist.
+Repeat until the user says: generate now or im done with the playlist or many things that a user can say when he/she is done then you stop. 
 
 Format: Each song should have: Title, singer stored in a dictionary and nothing else no extra words just the dictionary
 example format: {'Name': ['Money trees', 'Good Morning', 'Beat It'],
@@ -198,30 +198,11 @@ class FinalizePlaylistAPIView(views.APIView):
                         {'error': 'Invalid session_id'}, 
                         status=status.HTTP_404_NOT_FOUND
                     )
-                
-                chat = chat_sessions[session_id]
-                
-                # Send finalize command
-                response = chat.send_message("generate now")
-                
-                response_text = response.text
-                try:
-                    songs = ast.literal_eval(response_text)
-                    if isinstance(songs, dict) and 'Name' in songs and 'Singer' in songs:
-                        for name, singer in zip(songs['Name'], songs['Singer']):
-                            combined_query = f"{name}, {singer}"
-                            TrackQuery.objects.create(query=combined_query)
-                except (ValueError, SyntaxError):
-                    # Handle cases where response_text is not a valid dictionary
-                    pass
-                
                 # Clean up session after finalization
                 del chat_sessions[session_id]
                 
                 return Response({
-                    'session_id': session_id,
-                    'final_playlist': response_text,
-                    'status': 'finalized'
+                    'status': 'finalizing'
                 }, status=status.HTTP_200_OK)
             
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
