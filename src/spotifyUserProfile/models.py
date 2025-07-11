@@ -73,7 +73,7 @@ class TrackQuery(models.Model):
 class get_track(models.Model):
     id = models.AutoField(primary_key = True)
     track_id = models.CharField(max_length=255)
-    query = models.OneToOneField(TrackQuery, on_delete=models.CASCADE, default= 0)
+    query = models.OneToOneField(TrackQuery, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Track ID: {self.track_id}"

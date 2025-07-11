@@ -23,6 +23,7 @@ from .views import login_page, hello
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('accounts/spotify/', include('spotifyUserProfile.urls')),
     path('accounts/', include('allauth.urls')), 
     path('', hello ), 
     path('login/', login_page, name='login'),

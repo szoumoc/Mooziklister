@@ -12,7 +12,9 @@ from .serializers import (
     SendMessageSerializer,
     DeleteSessionSerializer
 )
-
+from spotifyUserProfile.models import TrackQuery
+import ast
+from appresponse.utils import extract_dict
 
 # User Journey:
 
@@ -94,9 +96,21 @@ class StartSessionAPIView(views.APIView):
                 # Send initial prompt
                 response = chat.send_message(serializer.validated_data['prompt'])
                 
+                response_text = response.text
+                songs = extract_dict(response_text)
+                try:
+                    # songs = extract_dict(response_text)
+                    if songs and isinstance(songs, dict) and 'Name' in songs and 'Singer' in songs:
+                        for name, singer in zip(songs['Name'], songs['Singer']):
+                            combined_query = f"{name}, {singer}"
+                            TrackQuery.objects.create(query=combined_query)
+                except (ValueError, SyntaxError):
+                    # Handle cases where response_text is not a valid dictionary
+                    pass
+
                 return Response({
                     'session_id': session_id,
-                    'response': response.text,
+                    'response': songs,
                     'status': 'success'
                 }, status=status.HTTP_200_OK)
             
@@ -145,9 +159,20 @@ class ModifySongAPIView(views.APIView):
                 # Send modification request
                 response = chat.send_message(modification)
                 
+                response_text = response.text
+                try:
+                    songs = ast.literal_eval(response_text)
+                    if isinstance(songs, dict) and 'Name' in songs and 'Singer' in songs:
+                        for name, singer in zip(songs['Name'], songs['Singer']):
+                            combined_query = f"{name}, {singer}"
+                            TrackQuery.objects.create(query=combined_query)
+                except (ValueError, SyntaxError):
+                    # Handle cases where response_text is not a valid dictionary
+                    pass
+
                 return Response({
                     'session_id': session_id,
-                    'response': response.text,
+                    'response': response_text,
                     'status': 'modified'
                 }, status=status.HTTP_200_OK)
             
@@ -179,12 +204,23 @@ class FinalizePlaylistAPIView(views.APIView):
                 # Send finalize command
                 response = chat.send_message("generate now")
                 
+                response_text = response.text
+                try:
+                    songs = ast.literal_eval(response_text)
+                    if isinstance(songs, dict) and 'Name' in songs and 'Singer' in songs:
+                        for name, singer in zip(songs['Name'], songs['Singer']):
+                            combined_query = f"{name}, {singer}"
+                            TrackQuery.objects.create(query=combined_query)
+                except (ValueError, SyntaxError):
+                    # Handle cases where response_text is not a valid dictionary
+                    pass
+                
                 # Clean up session after finalization
                 del chat_sessions[session_id]
                 
                 return Response({
                     'session_id': session_id,
-                    'final_playlist': response.text,
+                    'final_playlist': response_text,
                     'status': 'finalized'
                 }, status=status.HTTP_200_OK)
             
@@ -230,9 +266,20 @@ class SendMessageAPIView(views.APIView):
                 # Send message
                 response = chat.send_message(message)
                 
+                response_text = response.text
+                try:
+                    songs = ast.literal_eval(response_text)
+                    if isinstance(songs, dict) and 'Name' in songs and 'Singer' in songs:
+                        for name, singer in zip(songs['Name'], songs['Singer']):
+                            combined_query = f"{name}, {singer}"
+                            TrackQuery.objects.create(query=combined_query)
+                except (ValueError, SyntaxError):
+                    # Handle cases where response_text is not a valid dictionary
+                    pass
+
                 return Response({
                     'session_id': session_id,
-                    'response': response.text,
+                    'response': response_text,
                     'status': 'success'
                 }, status=status.HTTP_200_OK)
             
