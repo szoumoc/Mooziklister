@@ -27,7 +27,8 @@ class Migration(migrations.Migration):
                 (
                     "llm_responses",
                     models.JSONField(
-                        default=list, help_text="List of LLM response objects"
+                        default=list,
+                        help_text="List of LLM response objects"
                     ),
                 ),
                 ("confirmed", models.BooleanField(default=False)),
